@@ -1,0 +1,27 @@
+{
+	"name": "IndateCommandCenter",
+
+	"window": {
+    "title" : "Indate Loading...",
+		"toolbar": false,
+    "frame": true,
+    "width": 500,
+    "height": 650,
+    "resizable": false,
+    "fullscreen": false
+
+	},
+
+  "version": "0.0.1",
+
+  "description": "The command center of the Indate patcher. Control multiple projects and upload them to an update server.",
+
+  "author": "Zay Wolfe <wolfezay@gmail.com>",
+
+  /*"repository": {
+    "type": "git",
+    "url": "https://github.com/nodejitsu/browsenpm.org"
+  },*/
+
+  "main": "./html/index.html"
+}
