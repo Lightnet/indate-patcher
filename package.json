@@ -3,12 +3,12 @@
 
 	"window": {
     "title" : "Indate Loading...",
-		"toolbar": false,
+		"toolbar": true,
     "frame": true,
-    "width": 500,
-    "height": 650,
-    "resizable": false,
-    "fullscreen": false
+    "width": 800,
+    "height": 600,
+    "min-width": 800,
+    "minheight": 600
 
 	},
 
@@ -18,10 +18,10 @@
 
   "author": "Zay Wolfe <wolfezay@gmail.com>",
 
-  /*"repository": {
+  "repository": {
     "type": "git",
-    "url": "https://github.com/nodejitsu/browsenpm.org"
-  },*/
+    "url": "https://github.com/zaywolfe/Indate_command_center.git"
+  },
 
   "main": "./html/index.html"
 }
