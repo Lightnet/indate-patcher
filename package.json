@@ -1,20 +1,20 @@
 {
-	"name": "IndateCommandCenter",
+	"name": "IndatePatcher",
 
 	"window": {
     "title" : "Indate Loading...",
 		"toolbar": true,
-    "frame": true,
-    "width": 800,
-    "height": 600,
-    "min-width": 800,
-    "minheight": 600
+    "frame": false,
+    "width": 500,
+    "height": 400,
+    "resizable" : false,
+    "fullscreen" : false
 
 	},
 
   "version": "0.0.1",
 
-  "description": "The command center of the Indate patcher. Control multiple projects and upload them to an update server.",
+  "description": "Indate patcher. Automatically update your released software from git.",
 
   "author": "Zay Wolfe <wolfezay@gmail.com>",
 

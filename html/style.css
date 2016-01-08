@@ -1,0 +1,55 @@
+body {
+  margin: 0;
+  font-family: Sans-serif;
+  text-align: center;
+  background-image: url("background.png");
+}
+
+#exitButton {
+  background-image: url("exit.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: rgba(256,50,50,0.3);
+  color: rgba(256,50,50,0.4);
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 25px;
+  height: 25px;
+}
+
+#updateChecker {
+  background-color: rgba(256, 256, 256, 0.1);
+  color: white;
+  position: absolute;
+  bottom: 30px;
+  width: 500px;
+  height: 50px;
+}
+
+#updateChecker ul {
+  list-style: none; overflow: hidden; position: relative; margin: 0;
+}
+
+#updateChecker ul li {
+  float: left; margin: 0 10px 0 0; height: 32px; padding-top: 18px;
+}
+
+#updateMessage {
+  text-align: left;
+  width: 320px;
+}
+
+#loader {
+  background-image: url("loading.svg");
+  background-position: center left;
+  background-repeat: no-repeat;
+  width: 32px;
+}
+
+#continueButton {
+  background-color: rgba(200,200,256, 0.2);
+  border-radius: 5px;
+  width: 50px;
+}
+

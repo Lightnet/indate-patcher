@@ -1,0 +1,8 @@
+{
+    repository: "www.git.com/default.git",
+    branch: "update",
+    user: "user",
+    password: "passs",
+    lastUpdate: "",
+    pathToExecutable: ""
+ }
