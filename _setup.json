@@ -1,8 +1,7 @@
 {
-    repository: "www.git.com/default.git",
-    branch: "update",
-    user: "user",
-    password: "passs",
-    lastUpdate: "",
-    pathToExecutable: ""
+  "server": "www.default.com/indate",
+  "identity": "default",
+  "user": "user",
+  "password": "passs",
+  "pathToExecutable": ""
  }

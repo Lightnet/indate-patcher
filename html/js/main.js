@@ -6,14 +6,24 @@ win.on( "loaded", function () {
   //setup
 
   var Data = require('./js/Data.js');
+  var Updater = require('./js/Updater.js');
   var Interface = require('./js/Interface.js');
 
-  //starting application
-  var app = new Interface.AppView({
-    model: new Data.Config()
+  //initialize vars
+  var config = null;
+  var app = null;
+  var updater = null;
+
+  //make config and load saved data
+  config = new Data.Config();
+
+  //updater = new Updater(config);
+
+  config.load(function(){
+    app = new Interface.AppView({
+      model: config
+    });
   });
-
-
 
 
   global.settings = new Data.Config();

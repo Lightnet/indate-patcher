@@ -11,16 +11,11 @@ var outputEncoding = 'hex';
 //models and collections
 var Config = Backbone.Model.extend({
   defaults: {
-    repository: "www.git.com/default.git",
-    branch: "update",
+    server: "www.default.com/indate",
+    identity: "default",
     user: "user",
     password: "passs",
-    lastUpdate: "",
     pathToExecutable: ""
-  },
-
-  initialize : function () {
-    this.load();
   },
 
   save: function () {
@@ -34,7 +29,7 @@ var Config = Backbone.Model.extend({
     fs.writeFile( "indate.cfg", crypted + cipher.final(outputEncoding) );
   },
 
-  load: function () {
+  load: function (callback) {
     //check if config file exists
     if ( fs.existsSync("indate.cfg") ) {//if exists
       var crypted = fs.readFileSync("indate.cfg" , inputEncoding );
@@ -44,20 +39,21 @@ var Config = Backbone.Model.extend({
 
       this.set( JSON.parse( decrypted + decipher.final( inputEncoding ) ) );
 
+    } else  if ( fs.existsSync("setup.json") ) {
+
+      var setup = fs.readFileSync("setup.json" , inputEncoding );
+      this.set( JSON.parse(setup) );
+
+      //save settings locally
+      this.save();
+
+      //delete setup file
+      fs.unlinkSync( "setup.json");
     } else {
-       if ( fs.existsSync("setup.json") ) {
-         var setup = fs.readFileSync("setup.json" , inputEncoding );
-         this.set( JSON.parse(setup) );
-
-         //save settings locally
-         this.save();
-
-         //delete setup file
-         fs.unlinkSync( "setup.json");
-       } else {
-         //throw an error
-       }
+      //throw an error
     }
+
+    callback();
   }
 
 

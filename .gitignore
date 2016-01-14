@@ -2,6 +2,10 @@
 logs
 *.log
 
+# config/setup
+indate.cfg
+setup.json
+
 # Runtime data
 pids
 *.pid
