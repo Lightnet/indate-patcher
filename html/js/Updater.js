@@ -1,5 +1,6 @@
 var fs = require('fs.extra');
 var hp = require('http-https');
+var ncp = require('ncp').ncp;
 var checksum = require('checksum');
 var events = require('events');
 
@@ -63,7 +64,7 @@ var Updater = function (config) {
 
   /*---- internal functions ----*/
   //get list of files and checksums for current version
-  var processCurrentFiles = function (path, callback) {
+  var processLocalFiles = function (path, callback) {
     getChecksums(listFiles(path), function(err, sums){
       if ( err ) callback(err);
 
@@ -130,15 +131,176 @@ var Updater = function (config) {
     return downloadList;
   };
 
-  processCurrentFiles('./bin', function(err, currentData){
+  var downloadFiles = function ( downloadList, index, callback ) {
+    index = ( index === undefined)? 0 : index;
+    var file = downloadList[index];
+    var dpath = config.get("server") + '/indate/' + config.get("identity") + '/' + file.path;
+    var destination = file.path.replace('/update-files/', './buffer/' );
+
+    //create file pipe and directories
+    var filename = destination.split('/');
+    filename = filename[filename.length-1];
+    fs.mkdirRecursiveSync( destination.replace(filename, '') );
+    var filePipe = fs.createWriteStream(destination);
+
+    //update user
+    var percentage = Math.round( (index+1) / downloadList.length * 100 );
+    self.emit('change', "downloading update... " + percentage + '%');
+
+    var request = hp.get( dpath, function (response) {
+      response.pipe(filePipe);
+
+      filePipe.on('finish', function(){
+        filePipe.close(function(){
+
+          //check if last file
+          if ( index+1 < downloadList.length || percentage === 100 ){
+
+            downloadFiles( downloadList, index+1, callback );
+
+          } else {
+
+            //update user
+            self.emit('change', "finished downloading...");
+            callback();
+
+          }
+
+        });
+      });
+    });
+
+    request.on('error', function(err) {
+      self.emit('ended', "Update failed. Try again later.");
+    });
+  };
+
+  var deleteDownloadedFiles = function (callback) {
+    //delete buffer and remake it
+    fs.rmrf('./buffer', function (err) {
+      if ( err ) {
+        self.emit('ended', 'Update Complete. err: could not delete temporary files.');
+
+      } else {//all done
+
+        self.emit('ended', 'Update Complete.');
+
+      }
+    });
+
+  };
+
+  var checkDownloadedFiles = function (updateList, callback) {
+    //get checksums for downloaded files
+    processLocalFiles( './buffer', function (err, downloadedList){
+      if ( err ) {
+        self.emit('ended', "Update failed. Try again later.");
+        //delete downloaded files
+        deleteDownloadedFiles();
+
+      } else {//compare checksums
+        var allMatch = true;
+        var downloadedListLength = downloadedList.length
+
+        for( var i = 0; i < downloadedListLength; i++ ) {
+          var matchFound = false;
+          var dfile = downloadedList[i].sum;
+
+          //compare to update download list checksums
+          var updateListLength = updateList.length;
+          for( var j = 0; j < updateListLength; j++ ) {
+            var ufile = updateList[j].sum;
+            if ( dfile === ufile )
+              matchFound = true;
+          }
+
+          //if matchFound is false, there was a problem downloading
+          if ( !matchFound )
+            allMatch = false;
+        }
+
+        if ( allMatch ) {
+          callback(null);
+        } else { //if all match isn't true, there was a problem downloading
+          callback(new Error("Mixmatch in update checksums"));
+        }
+
+      }
+    });
+  };
+
+  var invokeUpdateFiles = function (callback) {
+    ncp('./buffer', './bin', function (err) {
+      if (err) {
+        callback(err);
+      } else {
+        callback(null);
+      }
+    });
+  }
+
+  /*---- Update main code  ----*/
+
+  processLocalFiles('./bin', function(err, currentData){
     if (err) throw err;
 
     getUpdateData(function(err, serverData){
       if (err) throw err;
 
+
       var updateData = JSON.parse(serverData);
-      console.log(currentData, updateData);
-      console.log(makeDownloadList(currentData, updateData.files));
+      var downloadList = makeDownloadList(currentData, updateData.files);
+
+      //update user and start file downloads
+      if( downloadList.length > 0 ) {
+
+        //update user
+        self.emit('change', "update found... ");
+        //lock launcher
+        self.emit('lock');
+
+        //check if buffer is left behind
+        if ( fs.existsSync('./buffer') ) {
+          fs.rmrfSync('./buffer');
+        }
+        //create buffer folder
+        fs.mkdirRecursiveSync('./buffer');
+
+        downloadFiles(downloadList, 0, function() {
+
+          //update user
+          self.emit('change', 'checking update integrity...' );
+
+          checkDownloadedFiles(downloadList, function (err) {
+            if ( err ) {
+              self.emit('ended', "Update failed. Try again later.");
+              //delete downloaded files
+              deleteDownloadedFiles();
+
+            } else {
+
+              //update user
+              self.emit('change', 'updating files...' );
+              invokeUpdateFiles( function(err){
+                if ( err ) {
+                  self.emit('ended', "Update failed. Try again later.");
+                  //delete downloaded files
+                  deleteDownloadedFiles();
+
+                } else {
+                  deleteDownloadedFiles();
+                }
+
+              });
+            }
+          });
+          //self.emit('ended', "update finished" );
+        });
+      } else {
+        self.emit('ended', "No updates.");
+      }
+
+
     });
   });
 

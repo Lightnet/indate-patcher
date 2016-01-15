@@ -25,6 +25,17 @@ win.on( "loaded", function () {
     });
   });
 
+  updater.on('change', function(msg) {
+    app.updateUser(msg);
+  });
+
+  updater.on('ended', function(msg) {
+    app.endUpdating(msg);
+  });
+
+  updater.on('lock', function(){
+    app.deactivateSkip();
+  });
 
   global.settings = new Data.Config();
   console.log("done");

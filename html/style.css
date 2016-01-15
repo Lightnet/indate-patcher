@@ -41,15 +41,40 @@ body {
 }
 
 #loader {
-  background-image: url("loading.svg");
   background-position: center left;
   background-repeat: no-repeat;
   width: 32px;
+}
+
+#loader.active {
+  background-image: url("loading.svg");
+}
+
+#loader.done {
+  background-image: url("load-done.svg");
+}
+
+#waitMessage {
+  font-size: 0.6em;
+  color: red;
 }
 
 #continueButton {
   background-color: rgba(200,200,256, 0.2);
   border-radius: 5px;
   width: 50px;
+
+  transition: background-color 0.5s;
 }
 
+#continueButton:hover {
+  cursor: pointer;
+}
+
+#continueButton.active {
+  background-color: rgba(100,100, 256, 0.4);
+}
+
+#continueButton.active:hover {
+  background-color: rgba(50,50,256, 0.8);
+}
