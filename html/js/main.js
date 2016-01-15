@@ -17,9 +17,9 @@ win.on( "loaded", function () {
   //make config and load saved data
   config = new Data.Config();
 
-  //updater = new Updater(config);
-
   config.load(function(){
+    updater = new Updater(config);
+
     app = new Interface.AppView({
       model: config
     });
