@@ -24,6 +24,7 @@ This is the launcher/patcher component of the system
 
 ### Known Problems
 - Right now everything is downloaded to the bin directory. This is troublesome since then the launcher/updater itself can't be updated. It's a mistake on my part. Need to look into fixing this and how to go about updating the updater.
+- If the bin directory is empty, the launcher hangs.
 
 ### Indate Uploader
 The project uploading part of the system.
