@@ -16,10 +16,14 @@ This is the launcher/patcher component of the system
   - The password and user fields are for a future update to password protect the update directory with .htaccess.
 - Delete any existing "indate.cfg" file.
 - Start the launcher and it will generate a new "indate.cfg" file and delete the "setup.json" file.
+- Bin should hold your actual project files
 
 ### Future Updates
 - The encryption isn't very secure and can probably be easily beaten. This is just to discourage the average user. Better encryption in the future is a must.
 - Could probably save time by keeping the previous update information in a file instead of generating the checksums every launch.
+
+### Known Problems
+- Right now everything is downloaded to the bin directory. This is troublesome since then the launcher/updater itself can't be updated. It's a mistake on my part. Need to look into fixing this and how to go about updating the updater.
 
 ### Indate Uploader
 The project uploading part of the system.
