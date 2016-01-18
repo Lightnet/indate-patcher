@@ -12,7 +12,8 @@ This is the launcher/patcher component of the system
  ### Setup
  1. Copy the "_setup.json" file and rename it as "setup.json".
  2. Edit "setup.json" and input your project information based on Indate Uploader information.
-   - for the "server", type in the root directory that holds the "indate" directory on the server.
+   - For the "server", type in the root directory that holds the "indate" directory on the server.
+   - The password and user fields are for a future update to password protect the update directory with .htaccess.
  3. Delete any existing "indate.cfg" file.
  4. Start the launcher and it will generate a new "indate.cfg" file and delete the "setup.json" file.
 
@@ -22,4 +23,5 @@ This is the launcher/patcher component of the system
 
 ### Indate Uploader
 The project uploading part of the system.
+
 https://github.com/zaywolfe/indate-uploader
